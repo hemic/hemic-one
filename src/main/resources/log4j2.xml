@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <!--<Configuration status="WARN" monitorInterval="30"> -->
+    <properties>
+        <property name="LOG_HOME">./service-logs</property>
+    </properties>
+    <Appenders>
+        <!--*********************控制台日志***********************-->
+        <Console name="consoleAppender" target="SYSTEM_OUT">
+            <!--设置日志格式及颜色-->
+            <PatternLayout
+                pattern="%style{%d{ISO8601}}{bright,green} %highlight{%-5level} [%style{%t}{bright,blue}] %style{%C{}}{bright,yellow}: %msg%n%style{%throwable}{red}"
+                disableAnsi="false" noConsoleNoAnsi="false"/>
+        </Console>
+
+        <!--*********************文件日志***********************-->
+        <!--all级别日志-->
+        <RollingFile name="allFileAppender"
+                     fileName="${LOG_HOME}/all.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/all-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--设置日志格式-->
+            <PatternLayout>
+                <pattern>%d %p %C{} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <!--<OnStartupTriggeringPolicy/>-->
+                <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <!--debug级别日志-->
+        <RollingFile name="debugFileAppender"
+                     fileName="${LOG_HOME}/debug.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <!--过滤掉info及更高级别日志-->
+                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <!--设置日志格式-->
+            <PatternLayout>
+                <pattern>%d %p %C{} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <!--<OnStartupTriggeringPolicy/>-->
+                <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <!--info级别日志-->
+        <RollingFile name="infoFileAppender"
+                     fileName="${LOG_HOME}/info.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <!--过滤掉warn及更高级别日志-->
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <!--设置日志格式-->
+            <PatternLayout>
+                <pattern>%d %p %C{} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+            <!-- 设置日志文件切分参数 -->
+            <!--<OnStartupTriggeringPolicy/>-->
+            <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
+            <SizeBasedTriggeringPolicy size="100 MB"/>
+            <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
+            <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
+            <!--<DefaultRolloverStrategy max="100"/>-->
+        </RollingFile>
+
+        <!--warn级别日志-->
+        <RollingFile name="warnFileAppender"
+                     fileName="${LOG_HOME}/warn.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <!--过滤掉error及更高级别日志-->
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <!--设置日志格式-->
+            <PatternLayout>
+                <pattern>%d %p %C{} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <!--<OnStartupTriggeringPolicy/>-->
+                <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <!--error及更高级别日志-->
+        <RollingFile name="errorFileAppender"
+                     fileName="${LOG_HOME}/error.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--设置日志格式-->
+            <PatternLayout>
+                <pattern>%d %p %C{} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <!--<OnStartupTriggeringPolicy/>-->
+                <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <!--json格式error级别日志-->
+        <RollingFile name="errorJsonAppender"
+                     fileName="${LOG_HOME}/error-json.log"
+                     filePattern="${LOG_HOME}/error-json-%d{yyyy-MM-dd}-%i.log.gz">
+            <JSONLayout compact="true" eventEol="true" locationInfo="true"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 根日志设置 -->
+        <Root level="debug">
+            <AppenderRef ref="allFileAppender" level="all"/>
+            <AppenderRef ref="consoleAppender" level="debug"/>
+            <AppenderRef ref="debugFileAppender" level="debug"/>
+            <AppenderRef ref="infoFileAppender" level="info"/>
+            <AppenderRef ref="warnFileAppender" level="warn"/>
+            <AppenderRef ref="errorFileAppender" level="error"/>
+            <AppenderRef ref="errorJsonAppender" level="error"/>
+        </Root>
+
+        logger name="javax.activation" level="WARN"/>
+        <logger name="javax.mail" level="WARN"/>
+        <logger name="javax.management.remote" level="WARN"/>
+        <logger name="javax.xml.bind" level="WARN"/>
+        <logger name="ch.qos.logback" level="WARN"/>
+        <logger name="com.ryantenney" level="WARN"/>
+        <logger name="com.sun" level="WARN"/>
+        <logger name="com.zaxxer" level="WARN"/>
+        <logger name="io.undertow" level="WARN"/>
+        <logger name="io.undertow.websockets.jsr" level="ERROR"/>
+        <logger name="org.apache" level="WARN"/>
+        <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+        <logger name="org.bson" level="WARN"/>
+        <logger name="org.hibernate.validator" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+        <logger name="org.postgresql" level="WARN"/>
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.springframework.web" level="WARN"/>
+        <logger name="org.springframework.security" level="WARN"/>
+        <logger name="org.springframework.cache" level="WARN"/>
+        <logger name="org.thymeleaf" level="WARN"/>
+        <logger name="org.xnio" level="WARN"/>
+        <logger name="springfox" level="WARN"/>
+        <logger name="sun.rmi" level="WARN"/>
+        <logger name="liquibase" level="WARN"/>
+        <logger name="LiquibaseSchemaResolver" level="INFO"/>
+        <logger name="springfox.documentation.schema.property" level="ERROR"/>
+        <logger name="sun.rmi.transport" level="WARN"/>
+        <!-- See https://github.com/jhipster/generator-jhipster/issues/13835 -->
+        <logger name="Validator" level="INFO"/>
+        <!-- See https://github.com/jhipster/generator-jhipster/issues/14444 -->
+        <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="INFO"/>
+    </Loggers>
+
+</Configuration>

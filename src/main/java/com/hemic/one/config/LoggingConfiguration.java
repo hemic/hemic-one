@@ -2,13 +2,14 @@ package com.hemic.one.config;
 
 import static tech.jhipster.config.logging.LoggingUtils.*;
 
-import ch.qos.logback.classic.LoggerContext;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 
 
+import org.apache.logging.log4j.core.LoggerContext;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -37,13 +38,13 @@ public class LoggingConfiguration {
         JHipsterProperties.Logging.Logstash logstashProperties = loggingProperties.getLogstash();
 
         if (loggingProperties.isUseJsonFormat()) {
-            addJsonConsoleAppender(context, customFields);
+          //  addJsonConsoleAppender(context, customFields);
         }
         if (logstashProperties.isEnabled()) {
-            addLogstashTcpSocketAppender(context, customFields, logstashProperties);
+         //   addLogstashTcpSocketAppender(context, customFields, logstashProperties);
         }
         if (loggingProperties.isUseJsonFormat() || logstashProperties.isEnabled()) {
-            addContextListener(context, customFields, loggingProperties);
+          //  addContextListener(context, customFields, loggingProperties);
         }
     }
 }
