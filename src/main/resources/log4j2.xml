@@ -141,50 +141,49 @@
 
     <Loggers>
         <!-- 根日志设置 -->
-        <asyncRoot level="debug" includeLocation="false">
-            <AppenderRef ref="allFileAppender"  level="all"/>
+        <Root level="debug" includeLocation="false" >
+            <AppenderRef ref="allFileAppender" level="all"/>
             <AppenderRef ref="consoleAppender" level="debug"/>
             <AppenderRef ref="debugFileAppender" level="debug"/>
             <AppenderRef ref="infoFileAppender" level="info"/>
             <AppenderRef ref="warnFileAppender" level="warn"/>
             <AppenderRef ref="errorFileAppender" level="error"/>
             <AppenderRef ref="errorJsonAppender" level="error"/>
-        </asyncRoot>
+        </Root>
 
-        <asyncLogger name="javax.activation" includeLocation="false" level="WARN" />
-        <asyncLogger name="javax.mail" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="javax.management.remote" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="javax.xml.bind" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="ch.qos.logback"  includeLocation="false" level="WARN"/>
-        <asyncLogger name="com.ryantenney" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="com.sun" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="com.zaxxer" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="io.undertow" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="io.undertow.websockets.jsr" includeLocation="false"  level="ERROR"/>
-        <asyncLogger name="org.apache" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.apache.catalina.startup.DigesterFactory" includeLocation="false"  level="OFF"/>
-        <asyncLogger name="org.bson" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.hibernate.validator"  includeLocation="false" level="WARN"/>
-        <asyncLogger name="org.hibernate"  includeLocation="false" level="WARN"/>
-        <asyncLogger name="org.hibernate.ejb.HibernatePersistence" includeLocation="false"  level="OFF"/>
-        <asyncLogger name="org.postgresql" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.springframework" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.springframework.web" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.springframework.security" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.springframework.cache" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.thymeleaf" includeLocation="false"  level="WARN"/>
-        <asyncLogger name="org.xnio"  includeLocation="false" level="WARN"/>
-        <asyncLogger name="springfox"  includeLocation="false" level="WARN"/>
-        <asyncLogger name="sun.rmi"  includeLocation="false" level="WARN"/>
-        <asyncLogger name="liquibase"  includeLocation="false" level="WARN"/>
-        <asyncLogger name="LiquibaseSchemaResolver" includeLocation="false"  level="INFO"/>
-        <asyncLogger name="springfox.documentation.schema.property"  includeLocation="false" level="ERROR"/>
-        <asyncLogger name="sun.rmi.transport"  includeLocation="false" level="WARN"/>
+        <logger name="javax.activation" level="WARN"/>
+        <logger name="javax.mail" level="WARN"/>
+        <logger name="javax.management.remote" level="WARN"/>
+        <logger name="javax.xml.bind" level="WARN"/>
+        <logger name="ch.qos.logback" level="WARN"/>
+        <logger name="com.ryantenney" level="WARN"/>
+        <logger name="com.sun" level="WARN"/>
+        <logger name="com.zaxxer" level="WARN"/>
+        <logger name="io.undertow" level="WARN"/>
+        <logger name="io.undertow.websockets.jsr" level="ERROR"/>
+        <logger name="org.apache" level="WARN"/>
+        <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+        <logger name="org.bson" level="WARN"/>
+        <logger name="org.hibernate.validator" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+        <logger name="org.postgresql" level="WARN"/>
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.springframework.web" level="WARN"/>
+        <logger name="org.springframework.security" level="WARN"/>
+        <logger name="org.springframework.cache" level="WARN"/>
+        <logger name="org.thymeleaf" level="WARN"/>
+        <logger name="org.xnio" level="WARN"/>
+        <logger name="springfox" level="WARN"/>
+        <logger name="sun.rmi" level="WARN"/>
+        <logger name="liquibase" level="WARN"/>
+        <logger name="LiquibaseSchemaResolver" level="INFO"/>
+        <logger name="springfox.documentation.schema.property" level="ERROR"/>
+        <logger name="sun.rmi.transport" level="WARN"/>
         <!-- See https://github.com/jhipster/generator-jhipster/issues/13835 -->
-        <asyncLogger name="Validator"  includeLocation="false" level="INFO"/>
+        <logger name="Validator" level="INFO"/>
         <!-- See https://github.com/jhipster/generator-jhipster/issues/14444 -->
-        <asyncLogger name="_org.springframework.web.servlet.HandlerMapping.Mappings" includeLocation="false"  level="INFO"/>
-        <asyncLogger name="com.hemic"  includeLocation="false" level="WARN"/>
+        <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="INFO"/>
     </Loggers>
 
 </Configuration>
