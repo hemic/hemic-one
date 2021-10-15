@@ -14,6 +14,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.config.h2.H2ConfigurationHelper;
@@ -22,7 +25,7 @@ import tech.jhipster.config.h2.H2ConfigurationHelper;
  * Configuration of web application with Servlet 3.0 APIs.
  */
 @Configuration
-public class WebConfigurer implements ServletContextInitializer {
+public class WebConfigurer  implements ServletContextInitializer,WebMvcConfigurer    {
 
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
@@ -69,5 +72,10 @@ public class WebConfigurer implements ServletContextInitializer {
     private void initH2Console(ServletContext servletContext) {
         log.debug("Initialize H2 console");
         H2ConfigurationHelper.initH2Console(servletContext);
+    }
+
+  @Override
+  public   void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new ContextHandler());
     }
 }

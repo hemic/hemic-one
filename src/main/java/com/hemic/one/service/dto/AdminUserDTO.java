@@ -11,7 +11,7 @@ import javax.validation.constraints.*;
 /**
  * A DTO representing a user, with his authorities.
  */
-public class AdminUserDTO {
+public class AdminUserDTO extends UserDTO{
 
     private Long id;
 
@@ -68,18 +68,22 @@ public class AdminUserDTO {
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
 
+    @Override
     public String getLogin() {
         return login;
     }
 
+    @Override
     public void setLogin(String login) {
         this.login = login;
     }
