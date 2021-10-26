@@ -1,11 +1,14 @@
 package com.hemic.one.config;
 
+import com.hemic.one.security.jwt.TokenProvider;
+import java.util.Locale;
 import javax.servlet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.*;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -33,9 +36,17 @@ public class WebConfigurer  implements ServletContextInitializer,WebMvcConfigure
 
     private final JHipsterProperties jHipsterProperties;
 
-    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties) {
+    private  final TokenProvider tokenProvider;
+
+
+    private final MessageSource messageSource;
+
+    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties, TokenProvider tokenProvider, MessageSource messageSource) {
         this.env = env;
         this.jHipsterProperties = jHipsterProperties;
+        this.tokenProvider=tokenProvider;
+        this.messageSource=messageSource;
+
     }
 
     @Override
@@ -76,6 +87,6 @@ public class WebConfigurer  implements ServletContextInitializer,WebMvcConfigure
 
   @Override
   public   void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ContextHandler());
+        registry.addInterceptor(new ContextHandler(tokenProvider,messageSource));
     }
 }

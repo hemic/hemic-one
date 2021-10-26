@@ -1,7 +1,9 @@
 package com.hemic.one.utils;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import java.util.Locale;
 import java.util.UUID;
+import org.springframework.context.MessageSource;
 
 /**
  * @Author jor
@@ -9,22 +11,26 @@ import java.util.UUID;
  */
 public class ContextUtil {
 
-    private final static TransmittableThreadLocal<ContextInfo> context = new TransmittableThreadLocal();
+    private final static TransmittableThreadLocal<ContextInfo> CONTEXT = new TransmittableThreadLocal<>();
 
     public static void remove() {
-        context.remove();
+        CONTEXT.remove();
     }
 
-    public static UserInfo getUserInfo() {
-        return context.get().userInfo();
-    }
+   /* public static UserInfo getUserInfo() {
+        return CONTEXT.get().userInfo();
+    }*/
 
     public static String getTraceId() {
-        return context.get().traceId();
+        return CONTEXT.get().traceId();
     }
 
-    public void setContext(String languageKey,String url,UserInfo userInfo){
-     context.set(new ContextInfo(UUID.randomUUID().toString(), languageKey, url, userInfo));
+    public static ContextInfo getContext(){
+        return CONTEXT.get();
+    }
+
+    public static void setContext(String url,String jwt, Locale locale, MessageSource messageSource){
+        CONTEXT.set(new ContextInfo(UUID.randomUUID().toString(), url, jwt,locale,messageSource));
     }
 
 
