@@ -1,6 +1,7 @@
 package com.hemic.one.service;
 
 import com.hemic.one.config.Constants;
+import com.hemic.one.constants.ErrorConstants;
 import com.hemic.one.domain.Authority;
 import com.hemic.one.domain.User;
 import com.hemic.one.repository.AuthorityRepository;
@@ -9,6 +10,7 @@ import com.hemic.one.security.AuthoritiesConstants;
 import com.hemic.one.security.SecurityUtils;
 import com.hemic.one.service.dto.AdminUserDTO;
 import com.hemic.one.service.dto.UserDTO;
+import com.hemic.one.utils.Assert;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -132,6 +134,10 @@ public class UserService {
     }
 
     public User createUser(AdminUserDTO userDTO) {
+
+        Assert.isNotPresent(userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()), ErrorConstants.LOGIN_ALREADY_USED);
+        Assert.isNotPresent(userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()),ErrorConstants.EMAIL_ALREADY_USED);
+
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
@@ -140,6 +146,7 @@ public class UserService {
             user.setEmail(userDTO.getEmail().toLowerCase());
         }
         user.setImageUrl(userDTO.getImageUrl());
+
         if (userDTO.getLangKey() == null) {
             user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
         } else {
@@ -172,6 +179,11 @@ public class UserService {
      * @return updated user.
      */
     public Optional<AdminUserDTO> updateUser(AdminUserDTO userDTO) {
+        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        Assert.isFalse(existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId())),ErrorConstants.EMAIL_ALREADY_USED);
+        existingUser = userRepository.findOneByLogin(userDTO.getLogin().toLowerCase());
+        Assert.isFalse(existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId())),ErrorConstants.LOGIN_ALREADY_USED);
+
         return Optional
             .of(userRepository.findById(userDTO.getId()))
             .filter(Optional::isPresent)

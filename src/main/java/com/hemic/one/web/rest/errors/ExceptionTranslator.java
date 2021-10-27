@@ -115,31 +115,19 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
         return create(ex, problem, request);
     }
 
+
+
     @ExceptionHandler
-    public ResponseEntity<Problem> handleEmailAlreadyUsedException(
-        com.hemic.one.service.EmailAlreadyUsedException ex,
-        NativeWebRequest request
-    ) {
-        EmailAlreadyUsedException problem = new EmailAlreadyUsedException();
+    public ResponseEntity<Problem> handleThrowableProblemWithCode(ThrowableProblemWithCode ex,  NativeWebRequest request){
         return create(
-            problem,
+            ex,
             request,
-            HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage())
+            HeaderUtil.createFailureAlert(applicationName, true, null, ex.getTitle(), ex.getMessage())
         );
     }
 
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(
-        com.hemic.one.service.UsernameAlreadyUsedException ex,
-        NativeWebRequest request
-    ) {
-        LoginAlreadyUsedException problem = new LoginAlreadyUsedException();
-        return create(
-            problem,
-            request,
-            HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage())
-        );
-    }
+
+
 
     @ExceptionHandler
     public ResponseEntity<Problem> handleInvalidPasswordException(

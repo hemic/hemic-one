@@ -5,17 +5,19 @@ package com.hemic.one.constants;
  * @create 2021/10/25 17:23
  */
 public enum ErrorConstants implements BaseError{
+    LOGIN_ALREADY_USED(5001,"error.com.hemic.one.service.UserService.LoginAlreadyUsed"),
+    EMAIL_ALREADY_USED(5002,"error.com.hemic.one.service.UserService.EmailAlreadyUsed")
+
     ;
 
 
-
-    ErrorConstants(int code, String detail){
+    ErrorConstants(int code, String message){
         this.code = code;
-        this.detail = detail;
+        this.message = message;
     }
 
     private final int code;
-    public final String detail;
+    public final String message;
     @Override
     public int code() {
         return this.code;
@@ -23,6 +25,6 @@ public enum ErrorConstants implements BaseError{
 
     @Override
     public String message() {
-        return this.detail;
+        return this.message;
     }
 }
