@@ -129,13 +129,6 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
 
 
 
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleInvalidPasswordException(
-        com.hemic.one.service.InvalidPasswordException ex,
-        NativeWebRequest request
-    ) {
-        return create(new InvalidPasswordException(), request);
-    }
 
     @ExceptionHandler
     public ResponseEntity<Problem> handleBadRequestAlertException(BadRequestAlertException ex, NativeWebRequest request) {

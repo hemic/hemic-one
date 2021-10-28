@@ -11,10 +11,15 @@ import com.hemic.one.security.SecurityUtils;
 import com.hemic.one.service.dto.AdminUserDTO;
 import com.hemic.one.service.dto.UserDTO;
 import com.hemic.one.utils.Assert;
+import com.hemic.one.web.rest.vm.ManagedUserVM;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -46,30 +51,28 @@ public class UserService {
         this.authorityRepository = authorityRepository;
     }
 
-    public Optional<User> activateRegistration(String key) {
+    public void activateRegistration(String key) {
+        Optional<User> optional = userRepository.findOneByActivationKey(key);
+        Assert.isPresent(optional, ErrorConstants.INVALID_ACTIVATION_KEY);
         log.debug("Activating user for activation key {}", key);
-        return userRepository
-            .findOneByActivationKey(key)
-            .map(user -> {
-                // activate given user for the registration key.
-                user.setActivated(true);
-                user.setActivationKey(null);
-                log.debug("Activated user: {}", user);
-                return user;
-            });
+        optional.ifPresent(user -> {
+            user.setActivated(true);
+            user.setActivationKey(null);
+            log.debug("Activated user: {}", user);
+        });
     }
 
-    public Optional<User> completePasswordReset(String newPassword, String key) {
-        log.debug("Reset user password for reset key {}", key);
-        return userRepository
+    public void completePasswordReset(String newPassword, String key) {
+        Assert.isFalse(isPasswordLengthInvalid(newPassword), ErrorConstants.INVALID_PASSWORD);
+        Optional<User> optional = userRepository
             .findOneByResetKey(key)
-            .filter(user -> user.getResetDate().isAfter(Instant.now().minus(1, ChronoUnit.DAYS)))
-            .map(user -> {
-                user.setPassword(passwordEncoder.encode(newPassword));
-                user.setResetKey(null);
-                user.setResetDate(null);
-                return user;
-            });
+            .filter(user -> user.getResetDate().isAfter(Instant.now().minus(1, ChronoUnit.DAYS)));
+        Assert.isPresent(optional, ErrorConstants.USER_NOT_FOUND_BY_RESET_KEY);
+        User user = optional.get();
+        log.debug("Reset user password for reset key {}", key);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetKey(null);
+        user.setResetDate(null);
     }
 
     public Optional<User> requestPasswordReset(String mail) {
@@ -84,21 +87,18 @@ public class UserService {
     }
 
     public User registerUser(AdminUserDTO userDTO, String password) {
+        Assert.isFalse(isPasswordLengthInvalid(password), ErrorConstants.INVALID_PASSWORD);
         userRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .ifPresent(existingUser -> {
                 boolean removed = removeNonActivatedUser(existingUser);
-                if (!removed) {
-                    throw new UsernameAlreadyUsedException();
-                }
+                Assert.isTrue(removed, ErrorConstants.LOGIN_ALREADY_USED);
             });
         userRepository
             .findOneByEmailIgnoreCase(userDTO.getEmail())
             .ifPresent(existingUser -> {
                 boolean removed = removeNonActivatedUser(existingUser);
-                if (!removed) {
-                    throw new EmailAlreadyUsedException();
-                }
+                Assert.isTrue(removed, ErrorConstants.EMAIL_ALREADY_USED);
             });
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
@@ -136,7 +136,7 @@ public class UserService {
     public User createUser(AdminUserDTO userDTO) {
 
         Assert.isNotPresent(userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()), ErrorConstants.LOGIN_ALREADY_USED);
-        Assert.isNotPresent(userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()),ErrorConstants.EMAIL_ALREADY_USED);
+        Assert.isNotPresent(userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()), ErrorConstants.EMAIL_ALREADY_USED);
 
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
@@ -180,9 +180,9 @@ public class UserService {
      */
     public Optional<AdminUserDTO> updateUser(AdminUserDTO userDTO) {
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        Assert.isFalse(existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId())),ErrorConstants.EMAIL_ALREADY_USED);
+        Assert.isFalse(existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId())), ErrorConstants.EMAIL_ALREADY_USED);
         existingUser = userRepository.findOneByLogin(userDTO.getLogin().toLowerCase());
-        Assert.isFalse(existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId())),ErrorConstants.LOGIN_ALREADY_USED);
+        Assert.isFalse(existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId())), ErrorConstants.LOGIN_ALREADY_USED);
 
         return Optional
             .of(userRepository.findById(userDTO.getId()))
@@ -232,31 +232,28 @@ public class UserService {
      * @param imageUrl  image URL of user.
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(user -> {
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                if (email != null) {
-                    user.setEmail(email.toLowerCase());
-                }
-                user.setLangKey(langKey);
-                user.setImageUrl(imageUrl);
-                log.debug("Changed Information for User: {}", user);
-            });
+        Optional<String> login = SecurityUtils.getCurrentUserLogin();
+        Assert.isPresent(login, ErrorConstants.USER_NOT_FOUND);
+        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(email);
+        Assert.isFalse(existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(login.get())), ErrorConstants.EMAIL_ALREADY_USED);
+        Optional<User> userOptional = userRepository.findOneByLogin(login.get());
+        Assert.isPresent(userOptional, ErrorConstants.USER_NOT_FOUND);
+        User user = userOptional.get();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+
+
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void changePassword(String currentClearTextPassword, String newPassword) {
+        Assert.isFalse(isPasswordLengthInvalid(newPassword), ErrorConstants.INVALID_PASSWORD);
         SecurityUtils
             .getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
                 String currentEncryptedPassword = user.getPassword();
-                if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
-                    throw new InvalidPasswordException();
-                }
+                Assert.isTrue(passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword), ErrorConstants.INVALID_PASSWORD);
                 String encryptedPassword = passwordEncoder.encode(newPassword);
                 user.setPassword(encryptedPassword);
                 log.debug("Changed password for User: {}", user);
@@ -279,8 +276,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+    public AdminUserDTO getUserWithAuthorities() {
+        Optional<String> login = SecurityUtils.getCurrentUserLogin();
+        Assert.isPresent(login, ErrorConstants.USER_NOT_FOUND);
+        Optional<User> user = userRepository.findOneWithAuthoritiesByLogin(login.get());
+        Assert.isPresent(user, ErrorConstants.USER_NOT_FOUND);
+        return new AdminUserDTO(user.get());
     }
 
     /**
@@ -300,10 +301,20 @@ public class UserService {
 
     /**
      * Gets a list of all the authorities.
+     *
      * @return a list of all the authorities.
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    }
+
+
+    private static boolean isPasswordLengthInvalid(String password) {
+        return (
+            StringUtils.isEmpty(password) ||
+                password.length() < ManagedUserVM.PASSWORD_MIN_LENGTH ||
+                password.length() > ManagedUserVM.PASSWORD_MAX_LENGTH
+        );
     }
 }
