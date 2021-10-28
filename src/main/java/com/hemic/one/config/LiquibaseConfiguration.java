@@ -28,6 +28,8 @@ public class LiquibaseConfiguration {
         this.env = env;
     }
 
+    private static  final String SYNC = "sync-liquibase";
+
     @Bean
     public SpringLiquibase liquibase(
         @Qualifier("taskExecutor") Executor executor,
@@ -36,9 +38,14 @@ public class LiquibaseConfiguration {
         ObjectProvider<DataSource> dataSource,
         DataSourceProperties dataSourceProperties
     ) {
-        // If you don't want Liquibase to start asynchronously, substitute by this:
-        // SpringLiquibase liquibase = SpringLiquibaseUtil.createSpringLiquibase(liquibaseDataSource.getIfAvailable(), liquibaseProperties, dataSource.getIfUnique(), dataSourceProperties);
-        SpringLiquibase liquibase = SpringLiquibaseUtil.createAsyncSpringLiquibase(
+
+        SpringLiquibase liquibase   =(env.acceptsProfiles(Profiles.of(SYNC)))?
+            SpringLiquibaseUtil.createSpringLiquibase(
+            liquibaseDataSource.getIfAvailable(),
+            liquibaseProperties,
+            dataSource.getIfUnique(),
+            dataSourceProperties
+        ): SpringLiquibaseUtil.createAsyncSpringLiquibase(
             this.env,
             executor,
             liquibaseDataSource.getIfAvailable(),
@@ -46,7 +53,7 @@ public class LiquibaseConfiguration {
             dataSource.getIfUnique(),
             dataSourceProperties
         );
-        liquibase.setChangeLog("classpath:config/liquibase/master.xml");
+        liquibase.setChangeLog(liquibaseProperties.getChangeLog());
         liquibase.setContexts(liquibaseProperties.getContexts());
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setLiquibaseSchema(liquibaseProperties.getLiquibaseSchema());
