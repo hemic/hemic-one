@@ -25,12 +25,23 @@ public class Assert {
         }
     }
 
+    public static  void isEmpty(Collection array, BaseError error){
+        if(!CollectionUtils.isEmpty(array)){
+            throw new ServiceException(error);
+        }
+    }
+
     public static void notEmpty(Collection array, BaseError error){
         if(CollectionUtils.isEmpty(array)){
             throw new ServiceException(error);
         }
     }
 
+    public static void isEmpty(String str, BaseError error){
+        if(!StringUtils.isEmpty(str)){
+            throw new ServiceException(error);
+        }
+    }
     public static void notEmpty(String str, BaseError error){
         if(StringUtils.isEmpty(str)){
             throw new ServiceException(error);
@@ -39,6 +50,12 @@ public class Assert {
 
     public static void notNull(Object obj,BaseError error){
         if(obj==null){
+            throw new ServiceException(error);
+        }
+    }
+
+    public static void  isNull(Object obj,BaseError error){
+        if(obj!=null){
             throw new ServiceException(error);
         }
     }
