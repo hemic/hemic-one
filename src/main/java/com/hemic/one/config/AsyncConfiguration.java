@@ -1,5 +1,6 @@
 package com.hemic.one.config;
 
+import com.alibaba.ttl.threadpool.TtlExecutors;
 import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
         executor.setMaxPoolSize(taskExecutionProperties.getPool().getMaxSize());
         executor.setQueueCapacity(taskExecutionProperties.getPool().getQueueCapacity());
         executor.setThreadNamePrefix(taskExecutionProperties.getThreadNamePrefix());
-        return new ExceptionHandlingAsyncTaskExecutor(executor);
+        return TtlExecutors.getTtlExecutor(new ExceptionHandlingAsyncTaskExecutor(executor)) ;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zalando.problem.violations.ConstraintViolationProblemModule;
+import org.zalando.problem.jackson.ProblemModule;
 
 @Configuration
 public class JacksonConfiguration {
@@ -32,7 +33,13 @@ public class JacksonConfiguration {
         return new Hibernate5Module();
     }
 
-
+    /*
+     * Module for serialization/deserialization of RFC7807 Problem.
+     */
+    @Bean
+    public ProblemModule problemModule() {
+        return new ProblemModule();
+    }
 
     /*
      * Module for serialization/deserialization of ConstraintViolationProblem.
