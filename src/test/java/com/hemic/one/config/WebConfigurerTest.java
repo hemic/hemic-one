@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.hemic.one.security.jwt.TokenProvider;
 import java.util.*;
+import javax.annotation.Resource;
 import javax.servlet.*;
 import org.h2.server.web.WebServlet;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,9 @@ class WebConfigurerTest {
 
     private JHipsterProperties props;
 
+    @Resource
+    MessageSource messageSource;
+
     @BeforeEach
     public void setup() {
         servletContext = spy(new MockServletContext());
@@ -47,7 +51,7 @@ class WebConfigurerTest {
         env = new MockEnvironment();
         props = new JHipsterProperties();
 
-        webConfigurer = new WebConfigurer(env, props,new TokenProvider(props),new StaticMessageSource());
+        webConfigurer = new WebConfigurer(env, props);
     }
 
     @Test

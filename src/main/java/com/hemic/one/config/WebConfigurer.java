@@ -2,6 +2,7 @@ package com.hemic.one.config;
 
 import com.hemic.one.security.jwt.TokenProvider;
 import java.util.Locale;
+import javax.annotation.Resource;
 import javax.servlet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,18 +36,15 @@ public class WebConfigurer  implements ServletContextInitializer,WebMvcConfigure
     private final Environment env;
 
     private final JHipsterProperties jHipsterProperties;
+    @Resource
+    private TokenProvider tokenProvider;
 
-    private  final TokenProvider tokenProvider;
+    @Resource
+    private  MessageSource messageSource;
 
-
-    private final MessageSource messageSource;
-
-    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties, TokenProvider tokenProvider, MessageSource messageSource) {
+    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties) {
         this.env = env;
         this.jHipsterProperties = jHipsterProperties;
-        this.tokenProvider=tokenProvider;
-        this.messageSource=messageSource;
-
     }
 
     @Override
