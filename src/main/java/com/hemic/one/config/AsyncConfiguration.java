@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import tech.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
 
 @Configuration
 @EnableAsync
@@ -32,13 +31,13 @@ public class AsyncConfiguration implements AsyncConfigurer {
     @Bean(name = "taskExecutor")
     public Executor getAsyncExecutor() {
         log.debug("Creating Async Task Executor");
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        ThreadPoolTaskExecutor executor = new MonitorThreadPoolTaskExecutor();
         executor.setCorePoolSize(taskExecutionProperties.getPool().getCoreSize());
         executor.setMaxPoolSize(taskExecutionProperties.getPool().getMaxSize());
         executor.setQueueCapacity(taskExecutionProperties.getPool().getQueueCapacity());
         executor.setThreadNamePrefix(taskExecutionProperties.getThreadNamePrefix());
         executor.initialize();
-        return TtlExecutors.getTtlExecutor(new ExceptionHandlingAsyncTaskExecutor(executor)) ;
+        return TtlExecutors.getTtlExecutor(new AsyncTaskExecutorExceptionLogger(executor));
     }
 
     @Override
