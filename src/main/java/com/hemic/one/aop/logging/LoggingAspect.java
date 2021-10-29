@@ -1,6 +1,7 @@
 package com.hemic.one.aop.logging;
 
 import java.util.Arrays;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.util.StopWatch;
 import tech.jhipster.config.JHipsterConstants;
 
 /**
@@ -97,7 +99,10 @@ public class LoggingAspect {
         if (log.isDebugEnabled()) {
             log.debug("Enter: {}() with argument[s] = {}", joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         }
+        StopWatch watch=new StopWatch();
         try {
+
+            watch.start(joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName());
             Object result = joinPoint.proceed();
             if (log.isDebugEnabled()) {
                 log.debug("Exit: {}() with result = {}", joinPoint.getSignature().getName(), result);
@@ -106,6 +111,12 @@ public class LoggingAspect {
         } catch (IllegalArgumentException e) {
             log.error("Illegal argument: {} in {}()", Arrays.toString(joinPoint.getArgs()), joinPoint.getSignature().getName());
             throw e;
+        }catch(Exception e){
+            throw e;
+        }finally {
+            watch.stop();
+            log.debug(watch.prettyPrint());
         }
+
     }
 }

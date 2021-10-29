@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
  */
 public class AdminUserDTO extends UserDTO{
 
-    private Long id;
+    private String id;
 
     @NotBlank
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -69,12 +69,12 @@ public class AdminUserDTO extends UserDTO{
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

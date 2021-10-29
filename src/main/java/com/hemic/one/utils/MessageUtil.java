@@ -10,6 +10,7 @@ public class MessageUtil {
         try {
             return  ContextUtil.getContext().messageSource().getMessage(msgKey, null, ContextUtil.getContext().locale());
         } catch (Exception e) {
+            e.printStackTrace();
             return msgKey;
         }
     }
