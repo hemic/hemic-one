@@ -134,9 +134,6 @@ public class MonitorThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
     private final static int HUNDRED = 100;
 
     private void monitor() {
-        int activeCount = this.getActiveCount();
-        int poolSize = this.getPoolSize();
-        int maxPoolSize = this.getMaxPoolSize();
         if ((this.getActiveCount() / this.getMaxPoolSize()) * HUNDRED >= threshold) {
             log.warn("this ThreadPool: {}, activeCount is {};maxPoolSize is{}; threshold is {}; rejectCount is {}", this.getThreadNamePrefix(), this.getActiveCount(), this.getMaxPoolSize(),
                 this.threshold, this.rejectCount.intValue());
