@@ -1,18 +1,13 @@
 package com.hemic.one.config;
 
-import com.hemic.one.security.jwt.TokenProvider;
 import com.hemic.one.utils.ContextUtil;
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.LocaleResolver;
 
 /**
  * @Author jor
@@ -20,12 +15,11 @@ import org.springframework.web.servlet.LocaleResolver;
  */
 public class ContextHandler implements HandlerInterceptor {
 
-    private final static String langKey="langKey";
+    private final static String langKey = "langKey";
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final TokenProvider tokenProvider;
-
 
 
     private final MessageSource messageSource;
@@ -38,7 +32,7 @@ public class ContextHandler implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String jwt = resolveToken(request);
-        ContextUtil.setContext(request.getRequestURI(),jwt, LocaleContextHolder.getLocale(),messageSource);
+        ContextUtil.setContext(request.getRequestURI(), jwt, LocaleContextHolder.getLocale(), messageSource);
         return true;
     }
 

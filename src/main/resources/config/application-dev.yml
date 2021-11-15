@@ -76,6 +76,8 @@ server:
 #
 # Full reference is available at: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
+application:
+  default-password: hemic@163.com
 
 jhipster:
   # CORS is only enabled by default with the "dev" profile

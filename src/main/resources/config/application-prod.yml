@@ -61,6 +61,11 @@ spring:
       discovery:
         enabled: true
 
+
+application:
+  default-password: hemic@163.com
+
+
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
 # keytool -genkey -alias one -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650

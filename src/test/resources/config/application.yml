@@ -15,8 +15,8 @@
 
 spring:
   profiles:
-    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
-    #active: testcontainers
+  # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
+  active: testcontainers
   application:
     name: one
   datasource:
@@ -38,6 +38,9 @@ spring:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+      session_factory:
+        eventListeners:
+          post-update: jpaListener
     properties:
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
@@ -49,6 +52,7 @@ spring:
       hibernate.query.fail_on_pagination_over_collection_fetch: true
   liquibase:
     contexts: test
+    change-log: classpath:config/liquibase/master.xml
   mail:
     host: localhost
   main:

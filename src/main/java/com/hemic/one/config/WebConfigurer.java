@@ -1,14 +1,11 @@
 package com.hemic.one.config;
 
-import com.hemic.one.security.jwt.TokenProvider;
-import java.util.Locale;
 import javax.annotation.Resource;
-import javax.servlet.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.server.*;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
-import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +17,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.config.h2.H2ConfigurationHelper;
@@ -29,18 +25,19 @@ import tech.jhipster.config.h2.H2ConfigurationHelper;
  * Configuration of web application with Servlet 3.0 APIs.
  */
 @Configuration
-public class WebConfigurer  implements ServletContextInitializer,WebMvcConfigurer    {
+public class WebConfigurer implements ServletContextInitializer, WebMvcConfigurer {
 
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
     private final Environment env;
 
     private final JHipsterProperties jHipsterProperties;
+
     @Resource
     private TokenProvider tokenProvider;
 
     @Resource
-    private  MessageSource messageSource;
+    private MessageSource messageSource;
 
     public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties) {
         this.env = env;
@@ -83,8 +80,8 @@ public class WebConfigurer  implements ServletContextInitializer,WebMvcConfigure
         H2ConfigurationHelper.initH2Console(servletContext);
     }
 
-  @Override
-  public   void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ContextHandler(tokenProvider,messageSource));
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new ContextHandler(tokenProvider, messageSource));
     }
 }

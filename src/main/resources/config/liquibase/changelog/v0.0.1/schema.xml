@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+
+    <changeSet id="00000000000001" author="jor">
+        <createTable tableName="one_user">
+            <column name="id" type="varchar(50)" remarks="主键">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(64)" remarks="创建者名称"/>
+            <column name="created_date" type="timestamp" remarks="创建时间"/>
+            <column name="last_modified_by" type="varchar(64)" remarks="最后更新人名称"/>
+            <column name="last_modified_date" type="timestamp" remarks="最后更新时间"/>
+            <column name="inner_version" type="bigint" remarks="乐观锁"/>
+            <column name="remark" type="varchar(254)" remarks="备注信息"/>
+            <column name="tenant_code" type="varchar(254)" remarks="租户"/>
+
+            <column name="user_name" type="varchar(254)" remarks="用户名"/>
+            <column name="password" type="varchar(60)" remarks="密码"/>
+            <column name="full_name" type="varchar(254)" remarks="全名"/>
+            <column name="email" type="varchar(254)" remarks="邮件"/>
+            <column name="is_manager" type="boolean" remarks="主管标签"/>
+            <column name="title" type="varchar(254)" remarks="职位"/>
+            <column name="mobile_number" type="varchar(64)" remarks="手机号"/>
+            <column name="employee_number" type="varchar(64)" remarks="工号"/>
+            <column name="seq" type="varchar(64)" remarks="流水号"/>
+            <column name="state" type="varchar(64)" remarks="账号状态：激活，未激活"/>
+            <column name="status" type="varchar(64)" remarks="员工状态：在职，离职"/>
+            <column name="icon" type="varchar(254)" remarks="照片"/>
+        </createTable>
+
+
+    </changeSet>
+</databaseChangeLog>

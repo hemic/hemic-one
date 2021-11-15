@@ -1,5 +1,9 @@
 package com.hemic.one.constants;
 
+import com.hemic.common.error.ServiceException;
+import com.hemic.common.error.ThrowableProblemWithCode;
+import com.hemic.common.model.BaseError;
+
 /**
  * @Author jor
  * @create 2021/10/25 17:23
@@ -10,7 +14,7 @@ public enum ErrorConstants implements BaseError {
     INVALID_PASSWORD(5003, "error.com.hemic.one.service.UserService.InvalidPassword"),
     INVALID_ACTIVATION_KEY(5004, "error.com.hemic.one.service.UserService.InvalidActivationKey"),
     USER_NOT_FOUND(5005, "error.com.hemic.one.service.UserService.UserNotFound"),
-    USER_NOT_FOUND_BY_RESET_KEY(5006, "error.com.hemic.one.service.UserService.UserNotFoundByResetKey"),
+
     ;
 
 
@@ -20,15 +24,22 @@ public enum ErrorConstants implements BaseError {
     }
 
     private final int code;
+
     public final String message;
+
 
     @Override
     public int code() {
-        return this.code;
+        return code;
     }
 
     @Override
     public String message() {
-        return this.message;
+        return message;
+    }
+
+    @Override
+    public ThrowableProblemWithCode getException() {
+        return new ServiceException(this);
     }
 }
