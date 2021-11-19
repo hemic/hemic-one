@@ -5,14 +5,19 @@ import com.hemic.common.model.AbstractAuditingEntity;
 import com.hemic.one.constants.Constants;
 import com.hemic.one.constants.State;
 import java.io.Serial;
-import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -22,7 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Entity
 @Table(name = "one_user")
-public class User extends AbstractAuditingEntity implements Serializable {
+public class User extends AbstractAuditingEntity {
 
 
     @Serial
@@ -74,10 +79,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "icon", length = 254)
     private String icon;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @BatchSize(size = 20)
+    private Set<UserRoleLink> userRoleLinkSet = new HashSet<>();
+
 
     public User() {
 
     }
+
 
     public User(String username, String fullName, String email, Boolean isManager, String title, String mobileNumber, String employeeNumber, String seq, String icon) {
         this.username = username;
@@ -103,103 +113,72 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.icon = icon;
     }
 
+
     public void generatorPassword(PasswordEncoder encoder, String password) {
         this.password = encoder.encode(password);
     }
 
-    public String getUsername() {
-        return username;
+    public void addRole(Role role) {
+        Optional<UserRoleLink> optional = getUserRoleLinkSet().stream().filter(userRoleLink -> userRoleLink.getRole().getId().equals(role.getId())).findAny();
+        if (optional.isEmpty()) {
+            getUserRoleLinkSet().add(new UserRoleLink(this, role));
+        }
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void removeRole(Role role) {
+        getUserRoleLinkSet().removeIf(userRoleLink -> userRoleLink.getRole().getId().equals(role.getId()));
+    }
+
+
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getFullName() {
         return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public Boolean getManager() {
         return isManager;
-    }
-
-    public void setManager(Boolean manager) {
-        isManager = manager;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getMobileNumber() {
         return mobileNumber;
-    }
-
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
     }
 
     public String getEmployeeNumber() {
         return employeeNumber;
     }
 
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
-    }
-
     public String getSeq() {
         return seq;
-    }
-
-    public void setSeq(String seq) {
-        this.seq = seq;
     }
 
     public String getState() {
         return state;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public Set<UserRoleLink> getUserRoleLinkSet() {
+        return userRoleLinkSet;
     }
 }

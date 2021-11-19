@@ -8,7 +8,7 @@
     <changeSet id="00000000000001" author="jor">
         <createTable tableName="one_user">
             <column name="id" type="varchar(50)" remarks="主键">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true" nullable="false" unique="true"/>
             </column>
             <column name="created_by" type="varchar(64)" remarks="创建者名称"/>
             <column name="created_date" type="timestamp" remarks="创建时间"/>
@@ -34,5 +34,58 @@
     </changeSet>
     <changeSet id="00000000000002" author="jor">
         <loadData tableName="one_user" file="config/liquibase/changelog/v0.0.1/one_user.csv"/>
+    </changeSet>
+    <changeSet id="00000000000003" author="jor">
+        <createTable tableName="one_role">
+            <column name="id" type="varchar(50)" remarks="主键">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="created_by" type="varchar(64)" remarks="创建者名称"/>
+            <column name="created_date" type="timestamp" remarks="创建时间"/>
+            <column name="last_modified_by" type="varchar(64)" remarks="最后更新人名称"/>
+            <column name="last_modified_date" type="timestamp" remarks="最后更新时间"/>
+            <column name="inner_version" type="bigint" remarks="乐观锁"/>
+            <column name="remark" type="varchar(254)" remarks="备注信息"/>
+            <column name="tenant_code" type="varchar(254)" remarks="租户"/>
+
+            <column name="name" type="varchar(254)" remarks="角色名称"/>
+        </createTable>
+        <createTable tableName="one_permission">
+            <column name="id" type="varchar(50)" remarks="主键">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="created_by" type="varchar(64)" remarks="创建者名称"/>
+            <column name="created_date" type="timestamp" remarks="创建时间"/>
+            <column name="last_modified_by" type="varchar(64)" remarks="最后更新人名称"/>
+            <column name="last_modified_date" type="timestamp" remarks="最后更新时间"/>
+            <column name="inner_version" type="bigint" remarks="乐观锁"/>
+            <column name="remark" type="varchar(254)" remarks="备注信息"/>
+            <column name="tenant_code" type="varchar(254)" remarks="租户"/>
+
+            <column name="authorization_url" type="varchar(254)" remarks="权限路径"/>
+        </createTable>
+        <createTable tableName="one_user_role">
+            <column name="id" type="varchar(50)" remarks="主键">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+
+            <column name="last_modified_by" type="varchar(64)" remarks="最后更新人名称"/>
+            <column name="last_modified_date" type="timestamp" remarks="最后更新时间"/>
+            <column name="tenant_code" type="varchar(254)" remarks="租户"/>
+
+            <column name="user_id" type="varchar(50)" remarks="用户id"/>
+            <column name="role_id" type="varchar(50)" remarks="角色id"/>
+        </createTable>
+        <createTable tableName="one_role_permission">
+            <column name="id" type="varchar(50)" remarks="主键">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="last_modified_by" type="varchar(64)" remarks="最后更新人名称"/>
+            <column name="last_modified_date" type="timestamp" remarks="最后更新时间"/>
+            <column name="tenant_code" type="varchar(254)" remarks="租户"/>
+
+            <column name="permission_id" type="varchar(50)" remarks="权限id"/>
+            <column name="role_id" type="varchar(50)" remarks="角色id"/>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

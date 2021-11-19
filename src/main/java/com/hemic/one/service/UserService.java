@@ -5,9 +5,9 @@ import com.hemic.one.config.ApplicationProperties;
 import com.hemic.one.constants.ErrorConstants;
 import com.hemic.one.domain.User;
 import com.hemic.one.repository.UserRepository;
+import com.hemic.one.service.dto.UserDto;
 import com.hemic.one.service.dto.UserToken;
 import com.hemic.one.service.mapper.UserMapper;
-import com.hemic.one.web.rest.vm.UserVm;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,24 +41,24 @@ public class UserService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public String create(UserVm vm) {
-        Assert.isEmpty(userRepository.findOneByUsername(vm.getUsername()), ErrorConstants.LOGIN_ALREADY_USED);
-        Assert.isEmpty(userRepository.findOneByEmailIgnoreCase(vm.getEmail()), ErrorConstants.EMAIL_ALREADY_USED);
-        User user = new User(vm.getUsername(), vm.getFullName(), vm.getEmail(), vm.getManager(), vm.getTitle(), vm.getMobileNumber(), vm.getEmployeeNumber(), vm.getSeq(),
-            vm.getIcon());
+    public String create(UserDto dto) {
+        Assert.isEmpty(userRepository.findOneByUsername(dto.getUsername()), ErrorConstants.LOGIN_ALREADY_USED);
+        Assert.isEmpty(userRepository.findOneByEmailIgnoreCase(dto.getEmail()), ErrorConstants.EMAIL_ALREADY_USED);
+        User user = new User(dto.getUsername(), dto.getFullName(), dto.getEmail(), dto.getManager(), dto.getTitle(), dto.getMobileNumber(), dto.getEmployeeNumber(), dto.getSeq(),
+            dto.getIcon());
         user.generatorPassword(passwordEncoder, applicationProperties.getDefaultPassword());
         return userRepository.save(user).getId();
     }
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(String username, UserVm vm) {
+    public void update(String username, UserDto dto) {
         var optionalUser = userRepository.findOneByUsername(username);
         Assert.notEmpty(optionalUser, ErrorConstants.USER_NOT_FOUND);
-        if (!vm.getEmail().equals(optionalUser.get().getEmail())) {
-            Assert.isEmpty(userRepository.findOneByEmailIgnoreCase(vm.getEmail()), ErrorConstants.EMAIL_ALREADY_USED);
+        if (!dto.getEmail().equals(optionalUser.get().getEmail())) {
+            Assert.isEmpty(userRepository.findOneByEmailIgnoreCase(dto.getEmail()), ErrorConstants.EMAIL_ALREADY_USED);
         }
-        optionalUser.get().changeBaseInfo(vm.getFullName(), vm.getEmail(), vm.getManager(), vm.getTitle(), vm.getMobileNumber(), vm.getEmployeeNumber(), vm.getSeq(), vm.getIcon());
+        optionalUser.get().changeBaseInfo(dto.getFullName(), dto.getEmail(), dto.getManager(), dto.getTitle(), dto.getMobileNumber(), dto.getEmployeeNumber(), dto.getSeq(), dto.getIcon());
 
     }
 
