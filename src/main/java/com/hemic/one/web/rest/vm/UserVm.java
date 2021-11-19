@@ -2,6 +2,9 @@ package com.hemic.one.web.rest.vm;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collection;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @Author jor
@@ -16,7 +19,7 @@ public class UserVm implements Serializable {
     private static final long serialVersionUID = -4742448937348749246L;
 
 
-    private String userName;
+    private String username;
 
     private String fullName;
 
@@ -33,7 +36,10 @@ public class UserVm implements Serializable {
     private String icon;
 
     private Boolean isManager;
+    private String password;
 
+    public UserVm() {
+    }
 
     public Boolean getManager() {
         return isManager;
@@ -43,8 +49,21 @@ public class UserVm implements Serializable {
         isManager = manager;
     }
 
-    public String getUserName() {
-        return userName;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -55,9 +74,7 @@ public class UserVm implements Serializable {
         this.email = email;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+
 
 
     public String getFullName() {

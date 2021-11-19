@@ -1,5 +1,8 @@
-package com.hemic.common.error;
+package com.hemic.one.config;
 
+import com.hemic.common.error.BadRequestAlertException;
+import com.hemic.common.error.FieldErrorVM;
+import com.hemic.common.error.ThrowableProblemWithCode;
 import com.hemic.one.web.rest.errors.ErrorConstants;
 import java.net.URI;
 import java.util.Arrays;

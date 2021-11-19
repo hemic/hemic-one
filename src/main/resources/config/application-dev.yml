@@ -78,6 +78,8 @@ server:
 # ===================================================================
 application:
   default-password: hemic@163.com
+  salt: 0178633289ACCDEF
+  secure-random: 16
 
 jhipster:
   # CORS is only enabled by default with the "dev" profile

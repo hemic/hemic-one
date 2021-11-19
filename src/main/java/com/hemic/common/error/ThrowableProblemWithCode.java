@@ -20,6 +20,7 @@ public class ThrowableProblemWithCode extends AbstractThrowableProblem {
 
     public ThrowableProblemWithCode(BaseError error, StatusType status) {
         super(URI.create(ContextUtil.getContext().url()), String.valueOf(error.code()), status, MessageUtil.get(error.message()));
+        printStackTrace();
     }
 
 

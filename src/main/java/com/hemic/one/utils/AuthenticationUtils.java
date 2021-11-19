@@ -1,7 +1,8 @@
 package com.hemic.one.utils;
 
 import com.hemic.common.model.BaseError;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.hemic.one.security.AuthenticationException;
+
 
 /**
  * @Author jor
@@ -12,7 +13,7 @@ public class AuthenticationUtils {
 
     public static void isUsernameValid(Boolean expression, BaseError error) {
         if (!expression) {
-            throw new UsernameNotFoundException(error.message());
+            throw new AuthenticationException(error);
         }
     }
 

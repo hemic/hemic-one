@@ -8,9 +8,9 @@ public class MessageUtil {
 
     public static String get(String msgKey) {
         try {
-            return  ContextUtil.getContext().messageSource().getMessage(msgKey, null, ContextUtil.getContext().locale());
+            return ContextUtil.getContext().messageSource().getMessage(msgKey, null, ContextUtil.getContext().locale());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return msgKey;
         }
     }

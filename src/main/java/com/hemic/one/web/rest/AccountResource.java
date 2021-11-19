@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @create 2021/11/15 15:29
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/account")
 public class AccountResource {
 
     private final UserService userService;
@@ -30,14 +30,15 @@ public class AccountResource {
         return userService.create(userVm);
     }
 
-    @PutMapping("/account/{id}")
-    public void update(@PathVariable("id") String id, @Valid @RequestBody UserVm userVm) {
-        userService.update(id, userVm);
+    @PutMapping("/{username}")
+    public void update(@PathVariable("username") String username, @Valid @RequestBody UserVm userVm) {
+        userService.update(username, userVm);
     }
 
-    @DeleteMapping("/account/{id}")
-    public void delete(@PathVariable("id") String id) {
-        userService.delete(id);
+
+    @DeleteMapping("/{username}")
+    public void delete(@PathVariable("username") String username) {
+        userService.delete(username);
     }
 
 

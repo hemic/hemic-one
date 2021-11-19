@@ -18,7 +18,7 @@
             <column name="remark" type="varchar(254)" remarks="备注信息"/>
             <column name="tenant_code" type="varchar(254)" remarks="租户"/>
 
-            <column name="user_name" type="varchar(254)" remarks="用户名"/>
+            <column name="username" type="varchar(254)" remarks="用户名"/>
             <column name="password" type="varchar(60)" remarks="密码"/>
             <column name="full_name" type="varchar(254)" remarks="全名"/>
             <column name="email" type="varchar(254)" remarks="邮件"/>
@@ -31,7 +31,8 @@
             <column name="status" type="varchar(64)" remarks="员工状态：在职，离职"/>
             <column name="icon" type="varchar(254)" remarks="照片"/>
         </createTable>
-
-
+    </changeSet>
+    <changeSet id="00000000000002" author="jor">
+        <loadData tableName="one_user" file="config/liquibase/changelog/v0.0.1/one_user.csv"/>
     </changeSet>
 </databaseChangeLog>

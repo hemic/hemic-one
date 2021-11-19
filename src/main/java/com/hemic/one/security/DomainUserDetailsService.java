@@ -2,12 +2,10 @@ package com.hemic.one.security;
 
 
 import com.hemic.one.constants.ErrorConstants;
-import com.hemic.one.domain.User;
 import com.hemic.one.repository.UserRepository;
+import com.hemic.one.service.UserService;
+import com.hemic.one.service.mapper.UserMapper;
 import com.hemic.one.utils.AuthenticationUtils;
-import java.util.HashSet;
-import java.util.Optional;
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,22 +21,24 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
 
+    private final UserService userService;
+
     private final UserRepository userRepository;
 
-    public DomainUserDetailsService(UserRepository userRepository) {
+    private final UserMapper userMapper;
+
+    public DomainUserDetailsService(UserService userService, UserRepository userRepository, UserMapper userMapper) {
+        this.userService = userService;
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserDetails loadUserByUsername(final String login) {
-        Optional<User> optional = new EmailValidator().isValid(login, null) ? userRepository.findOneByEmailIgnoreCase(login) : userRepository.findOneByUserName(login);
-        AuthenticationUtils.isUsernameValid(optional.isPresent(), ErrorConstants.USER_NOT_FOUND);
-        return createUser(optional.get().getUserName(), optional.get().getPassword());
-    }
-
-    private org.springframework.security.core.userdetails.User createUser(String username, String password) {
-        return new org.springframework.security.core.userdetails.User(username, password, new HashSet<>());
+        UserDetails details = userService.getByUsername(login);
+        AuthenticationUtils.isUsernameValid(details != null, ErrorConstants.USER_NOT_FOUND);
+        return details;
     }
 
 

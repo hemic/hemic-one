@@ -64,7 +64,8 @@ spring:
 
 application:
   default-password: hemic@163.com
-
+  salt: 0178633289ACCDEF
+  secure-random: 16
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:

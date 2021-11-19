@@ -1,4 +1,4 @@
-package com.hemic.common.config;
+package com.hemic.one.config;
 
 import com.hemic.common.logging.LoggingAspect;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,7 @@ import tech.jhipster.config.JHipsterConstants;
 public class LoggingAspectConfiguration {
 
     @Bean
-    @Profile(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)
+    @Profile({JHipsterConstants.SPRING_PROFILE_DEVELOPMENT, JHipsterConstants.SPRING_PROFILE_TEST})
     public LoggingAspect loggingAspect(Environment env) {
         return new LoggingAspect(env);
     }
