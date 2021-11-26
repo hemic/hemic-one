@@ -52,8 +52,8 @@ public class UserService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(String username, UserDto dto) {
-        var optionalUser = userRepository.findOneByUsername(username);
+    public void update(String id, UserDto dto) {
+        var optionalUser = userRepository.findById(id);
         Assert.notEmpty(optionalUser, ErrorConstants.USER_NOT_FOUND);
         if (!dto.getEmail().equals(optionalUser.get().getEmail())) {
             Assert.isEmpty(userRepository.findOneByEmailIgnoreCase(dto.getEmail()), ErrorConstants.EMAIL_ALREADY_USED);
@@ -62,23 +62,23 @@ public class UserService {
 
     }
 
-    @CacheEvict(value = "oneUserCache", key = "#username")
+
     @Transactional(rollbackFor = Exception.class)
-    public void delete(String username) {
-        var optionalUser = userRepository.findOneByUsername(username);
+    public void delete(String id) {
+        var optionalUser = userRepository.findById(id);
         Assert.notEmpty(optionalUser, ErrorConstants.USER_NOT_FOUND);
         userRepository.delete(optionalUser.get());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void changePassword(String username, String password, String newPassword) {
-        var optionalUser = userRepository.findOneByUsername(username);
+    public void changePassword(String id, String password, String newPassword) {
+        var optionalUser = userRepository.findById(id);
         Assert.notEmpty(optionalUser, ErrorConstants.USER_NOT_FOUND);
         Assert.isTrue(passwordEncoder.matches(optionalUser.get().getPassword(), password), ErrorConstants.INVALID_PASSWORD);
         optionalUser.get().generatorPassword(passwordEncoder, newPassword);
     }
 
-    @Cacheable(value = "oneUserCache", key = "#username")
+
     public UserToken getByUsername(String username) {
         var optionalUser = userRepository.findOneByUsername(username);
         return userMapper.domainToDto(optionalUser.orElse(null));

@@ -30,15 +30,15 @@ public class AccountResource {
         return userService.create(userVm);
     }
 
-    @PutMapping("/{username}")
-    public void update(@PathVariable("username") String username, @Valid @RequestBody UserVm userVm) {
-        userService.update(username, userVm);
+    @PutMapping("/{id}")
+    public void update(@PathVariable("id") String id, @Valid @RequestBody UserVm userVm) {
+        userService.update(id, userVm);
     }
 
 
-    @DeleteMapping("/{username}")
-    public void delete(@PathVariable("username") String username) {
-        userService.delete(username);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") String id) {
+        userService.delete(id);
     }
 
 

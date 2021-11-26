@@ -23,13 +23,19 @@ public class Role extends AbstractAuditingEntity {
     @Serial
     private static final long serialVersionUID = -4278011666632056874L;
 
-    @Column(name = "username", length = 254, nullable = false)
+    @Column(name = "name", length = 254, nullable = false)
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", orphanRemoval = true)
     @BatchSize(size = 20)
     Set<RolePermissionLink> permissionLinkSet = new HashSet<>();
 
+    public Role(String name) {
+        this.name = name;
+    }
+
+    public Role() {
+    }
 
     public String getName() {
         return name;

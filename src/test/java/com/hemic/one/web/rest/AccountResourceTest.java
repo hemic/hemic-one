@@ -14,6 +14,7 @@ import com.hemic.one.BaseTest;
 import com.hemic.one.web.rest.vm.UserVm;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class AccountResourceTest extends BaseTest {
@@ -31,12 +32,14 @@ class AccountResourceTest extends BaseTest {
     void update() throws Exception{
         UserVm userVm= JMockData.mock(UserVm.class, mockConfig);
         String username=userVm.getUsername();
-        mockMvc.perform(
+        MvcResult mvcResult= mockMvc.perform(
                 post("/api/account/register").content(JsonMapper.builder().build().writeValueAsString(userVm)).header(JWTFilter.AUTHORIZATION_HEADER,"Bearer "+getAdminToken()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+        String id =  mvcResult.getResponse().getContentAsString();
         userVm=JMockData.mock(UserVm.class, mockConfig);
         mockMvc.perform(
-                put("/api/account/"+username).content(JsonMapper.builder().build().writeValueAsString(userVm)).header(JWTFilter.AUTHORIZATION_HEADER,"Bearer "+getAdminToken()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                put("/api/account/"+id).content(JsonMapper.builder().build().writeValueAsString(userVm)).header(JWTFilter.AUTHORIZATION_HEADER,"Bearer "+getAdminToken()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
     }
@@ -45,12 +48,14 @@ class AccountResourceTest extends BaseTest {
     void delete() throws Exception{
         UserVm userVm= JMockData.mock(UserVm.class, mockConfig);
         String username=userVm.getUsername();
-        mockMvc.perform(
+        MvcResult mvcResult= mockMvc.perform(
                 post("/api/account/register").content(JsonMapper.builder().build().writeValueAsString(userVm)).header(JWTFilter.AUTHORIZATION_HEADER,"Bearer "+getAdminToken()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+        String id =  mvcResult.getResponse().getContentAsString();
         userVm=JMockData.mock(UserVm.class, mockConfig);
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/account/"+username).content(JsonMapper.builder().build().writeValueAsString(userVm)).header(JWTFilter.AUTHORIZATION_HEADER,"Bearer "+getAdminToken()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                MockMvcRequestBuilders.delete("/api/account/"+id).content(JsonMapper.builder().build().writeValueAsString(userVm)).header(JWTFilter.AUTHORIZATION_HEADER,"Bearer "+getAdminToken()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 }

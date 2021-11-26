@@ -20,6 +20,12 @@ public class Permission extends AbstractAuditingEntity {
     @Column(name = "authorization_url", length = 254)
     private String authorizationUrl;
 
+    public Permission() {
+    }
+
+    public Permission(String authorizationUrl) {
+        this.authorizationUrl = authorizationUrl;
+    }
 
     public String getAuthorizationUrl() {
         return authorizationUrl;
