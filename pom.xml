@@ -53,11 +53,11 @@
         <javassist.version>3.27.0-GA</javassist.version>
         <!-- The liquibase version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
-        <liquibase.version>4.5.0</liquibase.version>
+        <liquibase.version>4.6.1</liquibase.version>
         <liquibase-hibernate5.version>4.5.0</liquibase-hibernate5.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jaxb-runtime.version>2.3.3</jaxb-runtime.version>
-        <archunit-junit5.version>0.21.0</archunit-junit5.version>
+        <archunit-junit5.version>0.22.0</archunit-junit5.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <!-- Plugin versions -->
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
@@ -734,7 +734,7 @@
                                 <version>[${maven.version},)</version>
                             </requireMavenVersion>
                             <requireJavaVersion>
-                                <message>You are running an incompatible version of Java. JHipster supports JDK 17 to 11.</message>
+                                <message>You are running an incompatible version of Java. supports JDK 17 .</message>
                                 <version>17</version>
                             </requireJavaVersion>
                         </rules>
@@ -955,18 +955,7 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <!--
-                Profile for tracing requests with Zipkin.
-            -->
-            <id>zipkin</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-zipkin</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
+
         <profile>
             <!--
                 Profile for applying IDE-specific configuration.

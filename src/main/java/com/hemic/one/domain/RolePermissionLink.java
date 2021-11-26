@@ -30,6 +30,9 @@ public class RolePermissionLink extends AbstractLinkEntity {
         this.permission = permission;
     }
 
+    public RolePermissionLink() {
+    }
+
     public Role getRole() {
         return role;
     }

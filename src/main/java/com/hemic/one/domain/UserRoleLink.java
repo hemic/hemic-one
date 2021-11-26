@@ -25,6 +25,9 @@ public class UserRoleLink extends AbstractLinkEntity {
     private Role role;
 
 
+    public UserRoleLink() {
+    }
+
     public UserRoleLink(User user, Role role) {
         this.user = user;
         this.role = role;
