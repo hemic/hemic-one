@@ -14,7 +14,8 @@ public enum ErrorConstants implements BaseError {
     INVALID_PASSWORD(5003, "error.com.hemic.one.service.UserService.InvalidPassword"),
     INVALID_ACTIVATION_KEY(5004, "error.com.hemic.one.service.UserService.InvalidActivationKey"),
     USER_NOT_FOUND(5005, "error.com.hemic.one.service.UserService.UserNotFound"),
-
+    ROLE_NAME_ALREADY_USED(5006,"error.com.hemic.one.service.RoleService.RoleNameAlreadyUsed"),
+    ROLE_NOT_FOUND(5007,"error.com.hemic.one.service.RoleService.RoleNotFound")
     ;
 
 

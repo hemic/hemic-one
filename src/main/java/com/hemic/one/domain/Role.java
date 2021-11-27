@@ -37,6 +37,10 @@ public class Role extends AbstractAuditingEntity {
     public Role() {
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

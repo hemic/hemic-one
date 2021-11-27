@@ -3,6 +3,8 @@ package com.hemic.one.service.mapper;
 
 import com.hemic.one.domain.User;
 import com.hemic.one.service.dto.UserToken;
+
+import java.util.Collection;
 import java.util.List;
 import org.mapstruct.Mapper;
 
@@ -17,7 +19,7 @@ public interface UserMapper {
 
     UserToken domainToDto(User user);
 
-    List<UserToken> domainToDto(List<User> list);
+    List<UserToken> domainToDto(Collection<User> list);
 
 
 }
