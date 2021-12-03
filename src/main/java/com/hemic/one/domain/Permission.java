@@ -5,6 +5,8 @@ import java.io.Serial;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @Author jor
@@ -31,5 +33,27 @@ public class Permission extends AbstractAuditingEntity {
         return authorizationUrl;
     }
 
+    public void setAuthorizationUrl(String authorizationUrl) {
+        this.authorizationUrl = authorizationUrl;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Permission)) {
+            return false;
+        }
+
+        Permission that = (Permission) o;
+
+        return new EqualsBuilder().append(getAuthorizationUrl(), that.getAuthorizationUrl()).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(getAuthorizationUrl()).toHashCode();
+    }
 }

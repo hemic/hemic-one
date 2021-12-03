@@ -1,6 +1,7 @@
 package com.hemic.one.repository;
 
 import com.hemic.one.domain.Permission;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +11,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, String> {
+
+    Optional<Permission> findByAuthorizationUrl(String path);
 
 }

@@ -125,8 +125,16 @@ public class User extends AbstractAuditingEntity {
         }
     }
 
-    public void removeRole(Role role) {
-        getUserRoleLinkSet().removeIf(userRoleLink -> userRoleLink.getRole().getId().equals(role.getId()));
+    public void removeRole(String roleId) {
+        getUserRoleLinkSet().removeIf(userRoleLink -> userRoleLink.getRole().getId().equals(roleId));
+    }
+
+    public Set<Role> getRoles() {
+        Set<Role> roles = new HashSet<Role>();
+        for (UserRoleLink link : getUserRoleLinkSet()) {
+            roles.add(link.getRole());
+        }
+        return roles;
     }
 
 

@@ -56,9 +56,16 @@ public class Role extends AbstractAuditingEntity {
         }
     }
 
-    public void removePermission(Permission permission) {
-        getPermissionLinkSet().removeIf(rolePermissionLink -> rolePermissionLink.getPermission().getId().equals(permission.getId()));
+    public void removePermission(String permissionId) {
+        getPermissionLinkSet().removeIf(rolePermissionLink -> rolePermissionLink.getPermission().getId().equals(permissionId));
     }
 
+    public Set<Permission> getPermissions() {
+        Set<Permission> permissionSet = new HashSet<>();
+        for (RolePermissionLink link : getPermissionLinkSet()) {
+            permissionSet.add(link.getPermission());
+        }
+        return permissionSet;
+    }
 
 }

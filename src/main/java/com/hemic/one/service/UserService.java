@@ -1,15 +1,19 @@
 package com.hemic.one.service;
 
 import com.hemic.common.utils.Assert;
+import com.hemic.common.utils.LinkListSpilt;
 import com.hemic.one.config.ApplicationProperties;
 import com.hemic.one.constants.ErrorConstants;
+import com.hemic.one.domain.Role;
 import com.hemic.one.domain.User;
+import com.hemic.one.repository.RoleRepository;
 import com.hemic.one.repository.UserRepository;
+import com.hemic.one.service.dto.RoleDto;
 import com.hemic.one.service.dto.UserDto;
 import com.hemic.one.service.dto.UserToken;
+import com.hemic.one.service.mapper.RoleMapper;
 import com.hemic.one.service.mapper.UserMapper;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,15 +34,22 @@ public class UserService {
 
     private final ApplicationProperties applicationProperties;
 
+
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationProperties applicationProperties, UserMapper userMapper) {
+    private final RoleRepository roleRepository;
+
+    private final RoleMapper roleMapper;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationProperties applicationProperties, UserMapper userMapper,
+        RoleRepository roleRepository, RoleMapper roleMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.applicationProperties = applicationProperties;
         this.userMapper = userMapper;
+        this.roleRepository = roleRepository;
+        this.roleMapper = roleMapper;
     }
-
 
     @Transactional(rollbackFor = Exception.class)
     public String create(UserDto dto) {
@@ -76,6 +87,25 @@ public class UserService {
         Assert.notEmpty(optionalUser, ErrorConstants.USER_NOT_FOUND);
         Assert.isTrue(passwordEncoder.matches(optionalUser.get().getPassword(), password), ErrorConstants.INVALID_PASSWORD);
         optionalUser.get().generatorPassword(passwordEncoder, newPassword);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void changeUserRole(String id, List<String> roleIds) {
+        var optionalUser = userRepository.findById(id);
+        Assert.notEmpty(optionalUser, ErrorConstants.USER_NOT_FOUND);
+        List<Role> roles = roleRepository.findAllById(roleIds);
+        User user = optionalUser.get();
+        LinkListSpilt<Role> spilt = new LinkListSpilt<>(user.getRoles(), roles);
+        spilt.getCreateList().forEach(user::addRole);
+        spilt.getRemoveIds().forEach(user::removeRole);
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<RoleDto> getRoleByUserId(String id) {
+        var optionalUser = userRepository.findById(id);
+        Assert.notEmpty(optionalUser, ErrorConstants.USER_NOT_FOUND);
+        return roleMapper.domainToDto(optionalUser.get().getRoles());
     }
 
 
